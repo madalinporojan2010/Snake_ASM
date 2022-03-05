@@ -1,0 +1,62 @@
+make_text proc
+	push ebp
+	mov ebp, esp
+	pusha
+	
+	mov eax, [ebp+arg1] ; citim simbolul de afisat
+	cmp eax, 'A'
+	jl make_digit
+	cmp eax, 'Z'
+	jg make_digit
+	sub eax, 'A'
+	lea esi, letters
+	jmp draw_text
+make_digit:
+	cmp eax, '0'
+	jl make_space
+	cmp eax, '9'
+	jg make_space
+	sub eax, '0'
+	lea esi, digits
+	jmp draw_text
+make_space:	
+	mov eax, 26 ; de la 0 pana la 25 sunt litere, 26 e space
+	lea esi, letters
+	
+draw_text:
+	mov ebx, symbol_width
+	mul ebx
+	mov ebx, symbol_height
+	mul ebx
+	add esi, eax
+	mov ecx, symbol_height
+bucla_simbol_linii:
+	mov edi, [ebp+arg2] ; pointer la matricea de pixeli
+	mov eax, [ebp+arg4] ; pointer la coord y
+	add eax, symbol_height
+	sub eax, ecx
+	mov ebx, area_width
+	mul ebx
+	add eax, [ebp+arg3] ; pointer la coord x
+	shl eax, 2 ; inmultim cu 4, avem un DWORD per pixel
+	add edi, eax
+	push ecx
+	mov ecx, symbol_width
+bucla_simbol_coloane:
+	cmp byte ptr [esi], 0
+	je simbol_pixel_alb
+	mov dword ptr [edi], 0
+	jmp simbol_pixel_next
+simbol_pixel_alb:
+	mov dword ptr [edi], 0FFFFFFh
+simbol_pixel_next:
+	inc esi
+	add edi, 4
+	loop bucla_simbol_coloane
+	pop ecx
+	loop bucla_simbol_linii
+	popa
+	mov esp, ebp
+	pop ebp
+	ret
+make_text endp

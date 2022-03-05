@@ -1,0 +1,58 @@
+make_object proc
+	push ebp
+	mov ebp, esp
+	pusha
+	mov edi, [ebp+arg2]
+	;ebx-linia
+	;ecx-coloana
+	;arg1:color    arg2:area 	arg3:x1		arg4:y1		arg5:x2		arg6:y2
+	
+	mov edx, 0
+	mov eax, [ebp+arg4]
+	;;;;; [(y1 - 1) * area_width + x1] * 4
+	sub eax, 1
+	cmp eax, 0
+	jge not_negative
+		add eax, 1
+	not_negative:
+
+	mov ebx, area_width
+	mul ebx
+	add eax, [ebp+arg3]
+	mov ebx, 4
+	mul ebx
+	cmp eax, 0
+
+	add edi, eax
+
+	mov edx, 0
+	mov eax, area_width
+	add eax, [ebp+arg3]
+	sub eax, [ebp+arg5]
+	mov ebx, 4
+	mul ebx
+	sub eax, 4
+
+	mov ebx, [ebp+arg4]
+	mov edx, [ebp+arg1]
+	
+	w_linii:
+
+	mov ecx, [ebp+arg3]
+		w_coloane:
+			mov [edi], edx
+			add edi, 4
+		inc ecx
+		cmp ecx, [ebp+arg5]
+		jle w_coloane
+
+		add edi, eax
+	inc ebx
+	cmp ebx, [ebp+arg6]
+	jle w_linii
+
+	popa
+	mov esp, ebp
+	pop ebp
+	ret
+make_object endp

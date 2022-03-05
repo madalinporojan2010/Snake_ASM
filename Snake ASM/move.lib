@@ -1,0 +1,29 @@
+move_snake proc
+	push ebp
+	mov ebp, esp
+	pusha
+
+	mov edx, 0
+	;X - direction
+	mov eax, speed 
+	mov ebx, snake_dirX
+	mul ebx
+	mov edx, snake_posX
+	add edx, eax
+	mov snake_posX, edx
+	;;;;;???????????????? WTF
+	mov edx, 0
+	;Y - direction
+	mov eax, speed
+	mov ecx, snake_dirY
+	mul ecx
+	mov edx, snake_posY
+	add edx, eax
+	mov snake_posY, edx
+
+
+	popa
+	mov esp, ebp
+	pop ebp
+	ret
+move_snake endp

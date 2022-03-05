@@ -1,0 +1,44 @@
+
+check_boundries proc
+	push ebp
+	mov ebp, esp
+	pusha
+
+	mov eax, [ebp+arg1]
+	mov ebx, [ebp+arg2]
+	
+	cmp eax, area_width
+	jl not_width_border
+		mov eax, 0
+		mov snake_posX, eax
+		jmp check_done
+	not_width_border:
+	
+	cmp eax, 0
+	jge notz_width_border
+		mov eax, area_width
+		sub eax, 50
+		mov snake_posX, eax
+		jmp check_done
+	notz_width_border:
+	
+	cmp ebx, 550
+	jl not_height_border
+		mov ebx, 0
+		mov snake_posY, ebx
+		jmp check_done
+	not_height_border:
+	
+	cmp ebx, 0
+	jge notz_height_border
+		mov ebx, area_height
+		sub ebx, 50
+		mov snake_posY, ebx
+		jmp check_done
+	notz_height_border:
+	check_done:
+	popa
+	mov esp, ebp
+	pop ebp
+	ret
+check_boundries endp
